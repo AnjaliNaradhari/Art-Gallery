@@ -42,7 +42,7 @@ Art-Gallery/
 │
 └── select_role.html           # Main role-selection page
 ```
-** Tech Stack**
+**Tech Stack**
 
 Backend: Python (Flask)
 Database: MySQL
