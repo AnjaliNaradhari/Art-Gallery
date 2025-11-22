@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Artwork | Art Gallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        .btn-custom {
+            background-color: #198754;
+            color: white;
+            font-weight: 500;
+        }
+        .btn-custom:hover {
+            background-color: #157347;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <span class="navbar-brand">🎨 Art Gallery - Add Artwork</span>
+    <a href="{{ url_for('artist_home') }}" class="btn btn-outline-light">🏠 Home</a>
+  </div>
+</nav>
+
+<div class="form-container">
+  <h2 class="text-center">🖼️ Add New Artwork</h2>
+
+  <form method="POST">
+    <!-- Title -->
+    <div class="mb-3">
+      <label class="form-label">Artwork Title</label>
+      <input type="text" name="title" class="form-control" placeholder="Enter artwork title" required>
+    </div>
+
+    <!-- Type -->
+    <div class="mb-3">
+      <label class="form-label">Type</label>
+      <select name="type" class="form-select" required>
+        <option value="" disabled selected>-- Select Type --</option>
+        <option value="Painting">🎨 Painting</option>
+        <option value="Sculpture">🗿 Sculpture</option>
+        <option value="Photography">📸 Photography</option>
+        <option value="Digital Art">💻 Digital Art</option>
+        <option value="Print">🖨️ Print</option>
+        <option value="Mixed Media">🎭 Mixed Media</option>
+        <option value="Drawing">✏️ Drawing</option>
+      </select>
+    </div>
+
+    <!-- Year -->
+    <div class="mb-3">
+      <label class="form-label">Year</label>
+      <input type="number" name="year" class="form-control" placeholder="2025" required>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea name="description" class="form-control" rows="3" placeholder="Brief description..." required></textarea>
+    </div>
+
+    <!-- Artist -->
+    <div class="mb-3">
+      <label class="form-label">Select Artist</label>
+      <select name="artist_id" class="form-select" required>
+        <option value="" disabled selected>-- Choose Artist --</option>
+        {% for a in artists %}
+          <option value="{{ a.Artist_id }}">{{ a.Name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Stock -->
+    <div class="mb-3">
+      <label class="form-label">Select Stock Location</label>
+      <select name="stock_id" class="form-select" required>
+        <option value="" disabled selected>-- Choose Stock Location --</option>
+        {% for s in stocks %}
+          <option value="{{ s.Stock_id }}">{{ s.Location }} (Available: {{ s.Stock_available }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-custom w-100 mt-3">✅ Add Artwork</button>
+  </form>
+</div>
+
+<footer class="text-center mt-5 text-muted">
+  <p>© 2025 Art Gallery | Built with Flask + MySQL</p>
+</footer>
+
+</body>
+</html>
