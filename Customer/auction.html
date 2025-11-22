@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auctions</title>
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">⏳ Ongoing & Scheduled Auctions</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+                <div class="alert alert-{{ category }}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Artwork</th>
+                <th>Artist</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Start Price</th>
+                <th>Highest Bid</th>
+                <th>Ends In</th>
+                <th>Bid Now</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for a in auctions %}
+            <tr>
+                <td>{{ a.Artwork }}</td>
+                <td>{{ a.Artist }}</td>
+                <td>{{ a.Type }}</td>
+
+                <!-- STATUS DISPLAY -->
+                <td>
+                    {% if a.Status == 'Completed' %}
+                        <span class="badge bg-danger">Ended</span>
+                    {% elif a.Status == 'Ongoing' %}
+                        <span class="badge bg-success">Ongoing</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Scheduled</span>
+                    {% endif %}
+                </td>
+
+                <td>₹{{ a.Start_price }}</td>
+                <td>
+                    {% if a.Highest_bid %}
+                        ₹{{ a.Highest_bid }}
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+
+                <!-- COUNTDOWN -->
+                <td>
+                    {% if a.Status == 'Ongoing' %}
+                        <span class="countdown" data-end-time="{{ a.End_time }}"></span>
+                    {% elif a.Status == 'Scheduled' %}
+                        Starts at {{ a.Start_time }}
+                    {% else %}
+                        <span class="text-danger">Auction Ended</span>
+                    {% endif %}
+                </td>
+
+                <!-- BID FORM -->
+                <td>
+                    {% if a.Status == 'Ongoing' %}
+                        <form method="POST">
+                            <input type="hidden" name="auction_id" value="{{ a.Auction_id }}">
+
+                            <input type="number" step="0.01" name="bid_amount"
+                                   class="form-control mb-2"
+                                   placeholder="Enter your bid" required>
+
+                            <button type="submit" class="btn btn-success w-100">
+                                Place Bid
+                            </button>
+                        </form>
+                    {% else %}
+                        <span class="text-muted">Not Active</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!-- COUNTDOWN SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const countdowns = document.querySelectorAll(".countdown");
+
+    countdowns.forEach(cd => {
+        const endTime = new Date(cd.dataset.endTime).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = endTime - now;
+
+            if (diff <= 0) {
+                cd.innerHTML = "<span class='text-danger'>Ended</span>";
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            cd.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    });
+});
+</script>
+
+</body>
+</html>
