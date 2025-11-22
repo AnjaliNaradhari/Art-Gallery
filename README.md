@@ -18,7 +18,7 @@ The primary objective of this project is to demonstrate a well-structured databa
 Art-Gallery/
 │
 ├── app.py                     # Main Flask backend application
-├── database.sql               # Database schema + triggers + views + sample data
+├── artgallery.sql               # Database schema + triggers + views + sample data
 │
 ├── static/
 │   └── static.css             # Stylesheet for UI
