@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Art Auctions | Art Gallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <span class="navbar-brand">💰 Auctions</span>
+    <a href="{{ url_for('customer_home') }}" class="btn btn-outline-light">Home</a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+    <h3 class="text-center mb-4">Ongoing & Scheduled Auctions</h3>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}}">{{message}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Artwork</th>
+                <th>Artist</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Start Price</th>
+                <th>Highest Bid</th>
+                <th>Bid Now</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for auc in auctions %}
+            <tr>
+                <td>{{ auc.Artwork }}</td>
+                <td>{{ auc.Artist }}</td>
+                <td>{{ auc.Type }}</td>
+                <td>{{ auc.Status }}</td>
+                <td>{{ auc.Start_price }}</td>
+                <td>{{ auc.Highest_bid }}</td>
+                <td>
+                    {% if auc.Status == 'Ongoing' %}
+                    <form method="POST">
+                        <input type="hidden" name="auction_id" value="{{ auc.Auction_id }}">
+                        <input type="number" step="0.01" min="{{ auc.Highest_bid or auc.Start_price }}" name="bid_amount" class="form-control mb-2" placeholder="Enter your bid" required>
+                        <button type="submit" class="btn btn-success btn-sm w-100">Place Bid</button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted">Not active</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<footer class="text-center mt-5 text-muted">
+    <p>© 2025 Art Gallery Management System | Auctions</p>
+</footer>
+</body>
+</html>
